@@ -1,0 +1,22 @@
+# yaml for acr build and push 
+
+trigger:
+  none
+
+pool:
+  name: dockerpool
+  demands:
+  - agent.name -equals   dockeragent
+
+stages:
+  - stage: docker_build
+    jobs:
+      - job: "docker_build"
+        steps:
+        - task: DockerCompose@1
+          inputs:
+            containerregistrytype: 'Azure Container Registry'
+            azureSubscription: 'ACR-TO-Pipeline'
+            azureContainerRegistry: '{"loginServer":"classregistry.azurecr.io", "id" : "/subscriptions/c58c123c-4245-4723-a096-5ee1f90682a5/resourceGroups/ACR-grp/providers/Microsoft.ContainerRegistry/registries/classregistry"}'
+            dockerComposeFile: '**/docker-compose.yml'
+            action: 'Run a Docker Compose command'
